@@ -3,7 +3,6 @@ pipeline {
     environment {
         NODE_HOME = tool name: 'node' // Set Node.js tool installed earlier
         PATH = "${NODE_HOME}/bin:${env.PATH}"
-        DOCKER_CREDENTIALS_ID = 'raghu6289'
         DOCKER_IMAGE = "raghu6289/auth-mernstack"
     }
     stages {
@@ -44,7 +43,7 @@ pipeline {
         
         stage('Build and Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'raghua7795@gmail.com', passwordVariable: 'Raghu@6289')]) {
+                withCredentials([usernamePassword(credentialsId: 'raghu6289', toolName: 'Docker', usernameVariable: 'raghua7795@gmail.com', passwordVariable: 'Raghu@6289')]) {
                     sh """
                     echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
                     docker build -t ${DOCKER_IMAGE}:${env.BUILD_ID} .
