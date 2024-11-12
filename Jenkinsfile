@@ -42,14 +42,16 @@ pipeline {
             }
         }
         
-        stage('Build Docker Image') {
+        stage('Build and Push Docker Image') {
             steps {
-                script {
-                    docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
-                        def image = docker.build("${DOCKER_IMAGE}:${env.BUILD_ID}")
-                        image.push()
-                        image.push("latest")
-                    }
+                withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'raghua7795@gmail.com', passwordVariable: 'Raghu@6289')]) {
+                    sh """
+                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                    docker build -t ${DOCKER_IMAGE}:${env.BUILD_ID} .
+                    docker push ${DOCKER_IMAGE}:${env.BUILD_ID}
+                    docker tag ${DOCKER_IMAGE}:${env.BUILD_ID} ${DOCKER_IMAGE}:latest
+                    docker push ${DOCKER_IMAGE}:latest
+                    """
                 }
             }
         }
